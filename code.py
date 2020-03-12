@@ -142,7 +142,7 @@ def init():
     data = transform(data)
     data = convertCumultoLineItem(data)
     data['Country']= data['Country'].apply(lambda x: 'Azerbaijan' if x==' Azerbaijan' else x)
-    coord = pd.read_csv("C:\\dev_stuff\\ML Practice\\novel-corona-virus-2019-dataset\\latlong.csv",encoding = "ISO-8859-1")
+    coord = pd.read_csv("./latlong.csv",encoding = "ISO-8859-1")
     coord.columns=['Code','latitude','longitude','Country']
     test=data.merge(coord,how='left',on=['Country'])
     data = test[['Province/State', 'Country', 'Date', 'Key', 'Confirmed', 'Deaths','Recovered', 'loc_id','latitude', 'longitude']]

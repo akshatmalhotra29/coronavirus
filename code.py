@@ -84,7 +84,7 @@ def convertCumultoLineItem(data):
 def load_metadata():
     """Loads the metadata file from the current directory."""
     doc = edmx.Document()
-    with open('C:/dev_stuff/ML Practice/novel-corona-virus-2019-dataset/odata python/Metadata/metadata.xml', 'rb') as f:
+    with open('metadata.xml', 'rb') as f:
         doc.read(f)
     return doc
 

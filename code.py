@@ -40,6 +40,7 @@ def getDataset():
         url+=str(iter.year)+".csv"
         s=requests.get(url).content
         c=pd.read_csv(io.StringIO(s.decode('utf-8')))
+        c['Last Update'] = pd.to_datetime(str(iter.month)+'-'+str(iter.day)+'-'+str(iter.year), errors='coerce')
         data=data.append(c[['Province/State','Country/Region','Last Update','Confirmed','Deaths','Recovered']])
         iter = iter + timedelta(days=1)
     data.columns=['Province/State','Country','Last Update','Confirmed','Deaths','Recovered']
@@ -47,6 +48,11 @@ def getDataset():
 
 def transform(data):
     data['Province/State']=data['Province/State'].fillna('Not defined')
+    mask = (data['Province/State'] == 'Not defined') & (data['Country'] == 'France')
+    data['Province/State'][mask] = 'France'
+    mask = (data['Province/State'] == 'Not defined') & (data['Country'] == 'UK')
+    data['Province/State'][mask] = 'UK'
+    data['Country']= data['Country'].apply(lambda x: 'United Kingdom' if x=='UK' else x)
     data[['Confirmed','Deaths','Recovered']]=data[['Confirmed','Deaths','Recovered']].fillna(0)
     data['Country']= data['Country'].apply(lambda x: 'China' if x=='Mainland China' else x)
     data['Country']= data['Country'].apply(lambda x: 'Iran' if x=='Iran (Islamic Republic of)' else x)

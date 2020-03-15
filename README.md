@@ -1,4 +1,4 @@
-# Coronavirus python API per dat stats
+# Coronavirus python API per date stats
 Python API for live tracking of Novel coronavirus stats per day 
 
 <b>Key</b> - Defines Key for dataset  

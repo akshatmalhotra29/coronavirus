@@ -1,5 +1,5 @@
 # coronavirus
-Python API for live tracking of Novel coronavirus stats per day.
+Python API for live tracking of Novel coronavirus stats per day\n
 Key - Defines Key for dataset
 Province/State - Province name
 Country - Country Name

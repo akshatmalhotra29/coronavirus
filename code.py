@@ -22,55 +22,81 @@ from pyslet.odata2.memds import InMemoryEntityContainer
 from pyslet.odata2.server import Server
 from pyslet.py2 import character, output, range3
 #------------------For getting and transforming Data from github and converting into json------------------------------------------------#
-def getDataset():
-    start_date = datetime.strptime("01-22-2020","%m-%d-%Y")
-    data= pd.DataFrame(columns=['Province/State','Country/Region','Last Update','Confirmed','Deaths','Recovered'])
-    day_before = datetime.now() - timedelta(days=1)
-    iter=start_date
-    while(iter.date()<=day_before.date()):
-        url="https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/"
-        if(len(str(iter.month))==1):
-            url+='0'+str(iter.month)+"-"
-        else:
-            url+=str(iter.month)+"-"
-        if(len(str(iter.day))==1):
-            url+='0'+str(iter.day)+"-"
-        else:
-            url+=str(iter.day)+"-"
-        url+=str(iter.year)+".csv"
-        s=requests.get(url).content
-        c=pd.read_csv(io.StringIO(s.decode('utf-8')))
-        c['Last Update'] = pd.to_datetime(str(iter.month)+'-'+str(iter.day)+'-'+str(iter.year), errors='coerce')
-        data=data.append(c[['Province/State','Country/Region','Last Update','Confirmed','Deaths','Recovered']])
-        iter = iter + timedelta(days=1)
-    data.columns=['Province/State','Country','Last Update','Confirmed','Deaths','Recovered']
-    return data
+def getConfirmed():
+    data=pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv")
+    cnt=data[['Province/State','Country/Region','Lat','Long']]
+    cnt['Key']=cnt.index
+    temp=data.drop(['Province/State','Country/Region','Lat','Long'],axis=1)
+    lst=[]
+    for i in range(temp.shape[0]):
+        for j in range(temp.shape[1]):
+            tls=[i,temp.columns[j],temp.iloc[i,j],i]
+            lst.append(tls)
+    df_lst=pd.DataFrame(lst)
+    df_lst.columns=['Key','Date','Confirmed','loc_id']
+    datas = cnt.merge(df_lst,how='inner',on=['Key'])
+    datas.columns=['Province/State','Country','latitude','longitude','Key','Date','Confirmed','loc_id']
+    return datas
+
+def getDeaths():
+    data=pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv")
+    cnt=data[['Province/State','Country/Region','Lat','Long']]
+    cnt['Key']=cnt.index
+    temp=data.drop(['Province/State','Country/Region','Lat','Long'],axis=1)
+    lst=[]
+    for i in range(temp.shape[0]):
+        for j in range(temp.shape[1]):
+            tls=[i,temp.columns[j],temp.iloc[i,j],i]
+            lst.append(tls)
+    df_lst=pd.DataFrame(lst)
+    df_lst.columns=['Key','Date','Deaths','loc_id']
+    datas = cnt.merge(df_lst,how='inner',on=['Key'])
+    datas.columns=['Province/State','Country','latitude','longitude','Key','Date','Deaths','loc_id']
+    return datas
+
+def getRecovered():
+    data=pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv")
+    cnt=data[['Province/State','Country/Region','Lat','Long']]
+    cnt['Key']=cnt.index
+    temp=data.drop(['Province/State','Country/Region','Lat','Long'],axis=1)
+    lst=[]
+    for i in range(temp.shape[0]):
+        for j in range(temp.shape[1]):
+            tls=[i,temp.columns[j],temp.iloc[i,j],i]
+            lst.append(tls)
+    df_lst=pd.DataFrame(lst)
+    df_lst.columns=['Key','Date','Recovered','loc_id']
+    datas = cnt.merge(df_lst,how='inner',on=['Key'])
+    datas.columns=['Province/State','Country','latitude','longitude','Key','Date','Recovered','loc_id']
+    return datas
 
 def transform(data):
+    data['Date']=pd.to_datetime(data['Date'], errors='coerce')
+    data['Country']= data['Country'].apply(lambda x: 'Azerbaijan' if x==' Azerbaijan' else x)
     data['Province/State']=data['Province/State'].fillna('Not defined')
-    mask = (data['Province/State'] == 'Not defined') & (data['Country'] == 'France')
+    """mask = (data['Province/State'] == 'Not defined') & (data['Country'] == 'France')
     data['Province/State'][mask] = 'France'
     mask = (data['Province/State'] == 'Not defined') & (data['Country'] == 'UK')
     data['Province/State'][mask] = 'UK'
     data['Country']= data['Country'].apply(lambda x: 'United Kingdom' if x=='UK' else x)
-    data[['Confirmed','Deaths','Recovered']]=data[['Confirmed','Deaths','Recovered']].fillna(0)
-    data['Country']= data['Country'].apply(lambda x: 'China' if x=='Mainland China' else x)
-    data['Country']= data['Country'].apply(lambda x: 'Iran' if x=='Iran (Islamic Republic of)' else x)
-    data['Country']= data['Country'].apply(lambda x: 'Ivory Coast' if x=='Cote d\'Ivoire' else x)
-    data['Country']= data['Country'].apply(lambda x: 'Vietnam' if x=='Viet Nam' else x)
-    data['Country']= data['Country'].apply(lambda x: 'South Korea' if x=='Republic of Korea' or x=='Korea, South' else x)
-    data['Date'] = pd.to_datetime(data['Last Update'], errors='coerce')
-    data=data.drop(['Last Update'],axis=1)
+    data[['Confirmed','Deaths','Recovered']]=data[['Confirmed','Deaths','Recovered']].fillna(0)"""
+    # data['Country']= data['Country'].apply(lambda x: 'China' if x=='Mainland China' else x)
+    # data['Country']= data['Country'].apply(lambda x: 'Iran' if x=='Iran (Islamic Republic of)' else x)
+    #data['Country']= data['Country'].apply(lambda x: 'Ivory Coast' if x=='Cote d\'Ivoire' else x)
+    #data['Country']= data['Country'].apply(lambda x: 'Vietnam' if x=='Viet Nam' else x)
+    #data['Country']= data['Country'].apply(lambda x: 'South Korea' if x=='Republic of Korea' or x=='Korea, South' else x)
+    #data['Date'] = pd.to_datetime(data['Last Update'], errors='coerce')
+    #data=data.drop(['Last Update'],axis=1)
     return data
 
 def convertCumultoLineItem(data):
-    data=data.sort_values(by=['Country','Province/State','Date'])
-    df=data.groupby(['Country','Province/State'])[['Confirmed','Deaths','Recovered']].diff()
+    #data=data.sort_values(by=['Country','Province/State','Date'])
+    df=data.groupby(['Country','Province/State','Key','latitude','longitude','loc_id'])[['Confirmed','Deaths','Recovered']].diff()
     df = df[['Confirmed','Deaths','Recovered']]
     df.columns=['ConfirmedN','DeathsN','RecoveredN']
-    data['Key'] = [i for i in range(data.shape[0])]
-    df['Key'] = [i for i in range(df.shape[0])]
-    data=data.merge(df,how='inner',on=['Key'])
+    data['KeyN'] = [i for i in range(data.shape[0])]
+    df['KeyN'] = [i for i in range(df.shape[0])]
+    data=data.merge(df,how='inner',on=['KeyN'])
     data['ConfirmedN'].fillna(data['Confirmed'],inplace=True)
     data['DeathsN'].fillna(data['Deaths'],inplace=True)
     data['RecoveredN'].fillna(data['Recovered'],inplace=True)
@@ -79,18 +105,18 @@ def convertCumultoLineItem(data):
         'ConfirmedN':'Confirmed',
         'DeathsN':'Deaths',
         'RecoveredN':'Recovered'},inplace=True)
-    data_sub_2=data[['Country']]
-    labelencoder = LabelEncoder()
-    data_sub_2['Country']=labelencoder.fit_transform(data_sub_2['Country'])
-    data_sub_2.columns=['loc_id']
-    data=data.join(data_sub_2)
+    #data_sub_2=data[['Country']]
+    #labelencoder = LabelEncoder()
+    #data_sub_2['Country']=labelencoder.fit_transform(data_sub_2['Country'])
+    #data_sub_2.columns=['loc_id']
+    #data=data.join(data_sub_2)
     return data
 
 #------------------------------------For implementing Odata V2------------------------------------------------------------#
 def load_metadata():
     """Loads the metadata file from the current directory."""
     doc = edmx.Document()
-    with open('metadata.xml', 'rb') as f:
+    with open('./metadata.xml', 'rb') as f:
         doc.read(f)
     return doc
 
@@ -144,14 +170,22 @@ def test_model():
             
 
 def init():
-    data = getDataset()
+    data_c = getConfirmed()
+    data_c.rename(columns={"Key":"KeyC"},inplace=True)
+    data_d = getDeaths()
+    data_d=data_d[['Key','Deaths']]
+    data_r = getRecovered()
+    data_r=data_r[['Key','Recovered']]
+    data=pd.concat([data_c,data_d,data_r],axis=1)
+    data.drop(['Key'],axis=1,inplace=True)
+    data.rename(columns={"KeyC":"Key"},inplace=True)
     data = transform(data)
     data = convertCumultoLineItem(data)
-    data['Country']= data['Country'].apply(lambda x: 'Azerbaijan' if x==' Azerbaijan' else x)
-    coord = pd.read_csv("./latlong.csv",encoding = "ISO-8859-1")
-    coord.columns=['Code','latitude','longitude','Country']
-    test=data.merge(coord,how='left',on=['Country'])
-    data = test[['Province/State', 'Country', 'Date', 'Key', 'Confirmed', 'Deaths','Recovered', 'loc_id','latitude', 'longitude']]
+    data=data.drop(['Key'],axis=1)
+    data=data.rename(columns={
+        "KeyN":"Key"
+    })
+    #data = test[['Province/State', 'Country', 'Date', 'Key', 'Confirmed', 'Deaths','Recovered', 'loc_id','latitude', 'longitude']]
     data.to_csv("./newdata.csv")
     #data.to_csv("https://drive.google.com/file/d/1qWONkjTUaMJastaWAy52astwPdMjzZGj/view?usp=sharing")
     #data_json = data.to_json(orient='records',date_format='iso')

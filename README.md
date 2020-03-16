@@ -13,5 +13,5 @@ Python API for live tracking of Novel coronavirus stats per day
 <b>Recovered</b> - # Recovered cases on that particular date  
 
 To run :  
-python coronaapi.py  
+gunicorn coronaapi:app  
 API: https://covid19ak.herokuapp.com/

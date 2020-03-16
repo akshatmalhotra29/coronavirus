@@ -1,0 +1,11 @@
+Flask==1.1.1
+Werkzeug==0.16.0
+pandas==0.25.3
+scikit-learn==0.22.1
+uuid==1.30
+xlrd==1.2.0
+cfenv==0.5.3
+hdbcli==2.4.182
+requests==2.23.0
+pyslet==0.7.20170805
+gunicorn==20.0.4

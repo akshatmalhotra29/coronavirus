@@ -12,8 +12,6 @@ Python API for live tracking of Novel coronavirus stats per day
 <b>Deaths<b> - # Death cases on that particular date  
 <b>Recovered</b> - # Recovered cases on that particular date  
 
-The code writes back to newdata.csv file  
-
 To run :  
 python coronaapi.py  
 API: https://covid19ak.herokuapp.com/

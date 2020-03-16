@@ -1,4 +1,4 @@
-# Coronavirus python API per date stats
+# Data Analysis and forecasting on COVID-19 using SAP Analytics Cloud and python API
 Python API for live tracking of Novel coronavirus stats per day  
 Visualizations from SAC are exported in powerpoint slide
 

@@ -126,5 +126,5 @@ def init():
     })
     #data.to_csv("./newdata.csv")
     return data.to_json(orient='records')
-if __name__ == '__main__':
-    app.run()
+#if __name__ == '__main__':
+#    app.run()

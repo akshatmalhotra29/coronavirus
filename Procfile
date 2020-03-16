@@ -1,1 +1,1 @@
-web: python coronaapi.py
+web: gunicorn coronaapi:app

@@ -8,3 +8,4 @@ cfenv==0.5.3
 hdbcli==2.4.182
 requests==2.23.0
 pyslet==0.7.20170805
+gunicorn==20.0.4

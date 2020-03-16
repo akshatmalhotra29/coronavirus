@@ -85,7 +85,7 @@ def getRecovered():
     return datas
 
 def transform(data):
-    data['Date']=pd.to_datetime(data['Date'], errors='coerce',format='%d/%m/%Y')
+    #data['Date']=pd.to_datetime(data['Date'], errors='coerce',format='%d/%m/%Y')
     data['Country']= data['Country'].apply(lambda x: 'Azerbaijan' if x==' Azerbaijan' else x)
     data['Province/State']=data['Province/State'].fillna('Not defined')
     return data

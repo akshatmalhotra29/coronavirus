@@ -124,7 +124,7 @@ def init():
     data=data.rename(columns={
         "KeyN":"Key"
     })
-    data.to_csv("./newdata.csv")
+    #data.to_csv("./newdata.csv")
     return data.to_json(orient='records')
 #if __name__ == '__main__':
 #    app.run()

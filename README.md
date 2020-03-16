@@ -1,5 +1,6 @@
 # Coronavirus python API per date stats
-Python API for live tracking of Novel coronavirus stats per day 
+Python API for live tracking of Novel coronavirus stats per day  
+Visualizations from SAC are exported in powerpoint slide
 
 <b>Key</b> - Defines Key for dataset  
 <b>Province/State</b> - Province name  

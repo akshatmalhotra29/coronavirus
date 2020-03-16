@@ -126,6 +126,5 @@ def init():
     })
     #data.to_csv("./newdata.csv")
     return data.to_json()
-#if __name__ == '__main__':
-	#init()
-    #app.run(host='0.0.0.0', port=int(port), debug=True)
+if __name__ == '__main__':
+    app.run()

@@ -32,7 +32,7 @@ import time
 executor = ThreadPoolExecutor()
 
 app = Flask(__name__)
-port='8083'
+#port='8083'
 #port = os.getenv("PORT")
 
 #------------------For getting and transforming Data from github and converting into json------------------------------------------------#
@@ -124,7 +124,7 @@ def init():
     data=data.rename(columns={
         "KeyN":"Key"
     })
-    data.to_csv("./newdata.csv")
+    #data.to_csv("./newdata.csv")
     return data.to_json()
 #if __name__ == '__main__':
 	#init()

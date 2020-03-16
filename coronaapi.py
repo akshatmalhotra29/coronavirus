@@ -125,6 +125,6 @@ def init():
         "KeyN":"Key"
     })
     #data.to_csv("./newdata.csv")
-    return data.to_json()
+    return data.to_json(orient='records')
 if __name__ == '__main__':
     app.run()

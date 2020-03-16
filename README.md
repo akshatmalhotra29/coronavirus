@@ -15,4 +15,4 @@ Python API for live tracking of Novel coronavirus stats per day
 The code writes back to newdata.csv file  
 
 To run :
-Run the script in python file code.py 
+python coronaapi.py 

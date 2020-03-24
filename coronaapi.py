@@ -37,7 +37,7 @@ app = Flask(__name__)
 
 #------------------For getting and transforming Data from github and converting into json------------------------------------------------#
 def getConfirmed():
-    data=pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv")
+    data=pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv")
     cnt=data[['Province/State','Country/Region','Lat','Long']]
     cnt['Key']=cnt.index
     temp=data.drop(['Province/State','Country/Region','Lat','Long'],axis=1)
@@ -53,7 +53,7 @@ def getConfirmed():
     return datas
 
 def getDeaths():
-    data=pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv")
+    data=pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv")
     cnt=data[['Province/State','Country/Region','Lat','Long']]
     cnt['Key']=cnt.index
     temp=data.drop(['Province/State','Country/Region','Lat','Long'],axis=1)
@@ -114,8 +114,9 @@ def init():
     data_d = getDeaths()
     data_d=data_d[['Key','Deaths']]
     data_r = getRecovered()
-    data_r=data_r[['Key','Recovered']]
-    data=pd.concat([data_c,data_d,data_r],axis=1)
+    data_r=data_r[['Province/State','Country','latitude','longitude','Date','Recovered']]
+    data=pd.concat([data_c,data_d],axis=1)
+    data = data.merge(data_r,on=['Province/State','Country','latitude','longitude','Date'],how='left')
     data.drop(['Key'],axis=1,inplace=True)
     data.rename(columns={"KeyC":"Key"},inplace=True)
     data = transform(data)

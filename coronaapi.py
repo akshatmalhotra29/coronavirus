@@ -69,7 +69,7 @@ def getDeaths():
     return datas
 
 def getRecovered():
-    data=pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Recovered.csv")
+    data=pd.read_csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv")
     cnt=data[['Province/State','Country/Region','Lat','Long']]
     cnt['Key']=cnt.index
     temp=data.drop(['Province/State','Country/Region','Lat','Long'],axis=1)
@@ -116,10 +116,11 @@ def init():
     data_r = getRecovered()
     data_r=data_r[['Province/State','Country','latitude','longitude','Date','Recovered']]
     data=pd.concat([data_c,data_d],axis=1)
+    data = transform(data)
+    data_r = transform(data_r)
     data = data.merge(data_r,on=['Province/State','Country','latitude','longitude','Date'],how='left')
     data.drop(['Key'],axis=1,inplace=True)
     data.rename(columns={"KeyC":"Key"},inplace=True)
-    data = transform(data)
     data = convertCumultoLineItem(data)
     data=data.drop(['Key'],axis=1)
     data=data.rename(columns={
